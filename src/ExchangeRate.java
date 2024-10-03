@@ -83,40 +83,6 @@ public class ExchangeRate {
     }
 
     /*
-     * Standard methods -------------------------------------------------------
-     */
-
-    @Override
-    public final ExchangeRate newInstance() {
-        try {
-            return this.getClass().getConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new AssertionError(
-                    "Cannot construct object of type " + this.getClass());
-        }
-    }
-
-    @Override
-    public final void clear() {
-        this.createNewRep();
-    }
-
-    @Override
-    public final void transferFrom(ExchangeRate source) {
-        assert source != null : "Violation of: source is not null";
-        assert source != this : "Violation of: source is not this";
-        assert source instanceof ExchangeRate : ""
-                + "Violation of: source is of dynamic type NaturalNumberExample";
-        /*
-         * This cast cannot fail since the assert above would have stopped
-         * execution in that case.
-         */
-        ExchangeRate localSource = (ExchangeRate) source;
-        this.rep = localSource.rep;
-        localSource.createNewRep();
-    }
-
-    /*
      * Kernel methods ---------------------------------------------------------
      */
 
@@ -130,7 +96,6 @@ public class ExchangeRate {
      *            the currency in the numerator
      *
      */
-    @Override
     public final void setRate(double currency1, double currency2) {
         this.rep = Double.valueOf(currency2 / currency1);
     }
@@ -140,7 +105,6 @@ public class ExchangeRate {
      *
      * @return true if the ExchangeRate is <= 0.
      */
-    @Override
     public boolean isWorthless() {
         return this.rep.compareTo(0.0) <= 0;
     }
@@ -154,10 +118,17 @@ public class ExchangeRate {
      *
      * @param r
      */
-    @Override
     public void multiplyRate(ExchangeRate r) {
         assert r != null : "Violation of: r is not null";
         this.rep *= r.rep;
+    }
+
+    /**
+     * Overriding toString method.
+     */
+    @Override
+    public String toString() {
+        return this.rep.toString();
     }
 
     /**
@@ -177,7 +148,7 @@ public class ExchangeRate {
         out.println("Let's start with setRate.");
         out.println();
 
-        out.print(
+        out.println(
                 "Enter two currencies to make an ExchangeRate! The rate will be the ratio of the second entry to the first!");
         double currency1 = Double.valueOf(in.nextLine());
         double currency2 = Double.valueOf(in.nextLine());
@@ -187,20 +158,20 @@ public class ExchangeRate {
         r.setRate(currency1, currency2);
 
         out.println("The exchange rate of " + currency2 + " to " + currency1
-                + " is " + r.toString());
+                + " is " + r);
 
         out.println("Let's check out the isWorthless method!");
         if (r.isWorthless()) {
-            out.println(r.toString() + "is ≤ 0, so it's worthless!");
+            out.println(r + "is ≤ 0, so it's worthless!");
         } else {
-            out.println(r.toString() + "is ≥ 0, so it is NOT worthless!");
+            out.println(r + "is ≥ 0, so it is NOT worthless!");
         }
 
         out.println("Finally, let's see the multiplyRate method.");
         out.println(
                 "Enter an ExchangeRate to multiply your previous ExchangeRate by:");
         String inflationRateString = in.nextLine();
-        ExchangeRate inflRate = new ExchangeRate1(inflationRateString);
+        ExchangeRate inflRate = new ExchangeRate(inflationRateString);
         r.multiplyRate(inflRate);
 
         out.println("Your old rate is now " + r.toString()
