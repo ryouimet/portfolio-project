@@ -181,11 +181,8 @@ will likely refine your design to make your implementation easier to use.
     - `void setRate(double currency1, double currency2)`: Sets a rate between two currencies based on the ratio of currency2 to currency1.
     - `boolean isWorthless()`: returns true if an ExchangeRate is less than or equal to 0.
   - **Secondary Methods**:
-    - `void changeRate(ExchangeRate newRate)`: Changes the rate of a current ExchangeRate to a new one from an ExchangeRate.
     - `void multiplyRate(ExchangeRate inflationRate)`: Inflates/deflates a rate by a certain amount.
-    - `boolean isMoreValuable(ExchangeRate rate2)`: Returns true if `this` is greater than than `rate2`.
-    - `boolean isLessValuable(ExchangeRate rate2)`: Returns true if `this` is less than than `rate2`.
-    - `boolean hasEqualValue(ExchangeRate rate2)`: Returns true if `this` is equal to `rate2`.
+    - `int compareValue(ExchangeRate rate2)`: Compares the value of two `ExchangeRates`
   - **Additional Considerations** (*note*: "I don't know" is an acceptable
     answer for each of the following questions):
     - Would this component be mutable? Answer and explain:

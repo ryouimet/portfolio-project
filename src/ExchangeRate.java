@@ -83,40 +83,6 @@ public class ExchangeRate {
     }
 
     /*
-     * Standard methods -------------------------------------------------------
-     */
-
-    @Override
-    public final ExchangeRate newInstance() {
-        try {
-            return this.getClass().getConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new AssertionError(
-                    "Cannot construct object of type " + this.getClass());
-        }
-    }
-
-    @Override
-    public final void clear() {
-        this.createNewRep();
-    }
-
-    @Override
-    public final void transferFrom(ExchangeRate source) {
-        assert source != null : "Violation of: source is not null";
-        assert source != this : "Violation of: source is not this";
-        assert source instanceof ExchangeRate : ""
-                + "Violation of: source is of dynamic type NaturalNumberExample";
-        /*
-         * This cast cannot fail since the assert above would have stopped
-         * execution in that case.
-         */
-        ExchangeRate localSource = (ExchangeRate) source;
-        this.rep = localSource.rep;
-        localSource.createNewRep();
-    }
-
-    /*
      * Kernel methods ---------------------------------------------------------
      */
 
@@ -130,8 +96,7 @@ public class ExchangeRate {
      *            the currency in the numerator
      *
      */
-    @Override
-    public final void setRate(double currency1, double currency2) {
+    private void setRate(double currency1, double currency2) {
         this.rep = Double.valueOf(currency2 / currency1);
     }
 
@@ -140,8 +105,7 @@ public class ExchangeRate {
      *
      * @return true if the ExchangeRate is <= 0.
      */
-    @Override
-    public boolean isWorthless() {
+    private boolean isWorthless() {
         return this.rep.compareTo(0.0) <= 0;
     }
 
@@ -150,14 +114,33 @@ public class ExchangeRate {
      */
 
     /**
+     * Compares the values of two ExchangeRates.
+     *
+     * @param r
+     * @return 0 if {@code this} is equal to r, a positive number is
+     *         {@code this} is greater than r, or a negative number if
+     *         {@code this} is less than r.
+     */
+    private int compareValue(ExchangeRate r) {
+        return this.rep.compareTo(r.rep);
+    }
+
+    /**
      * Inflates or deflates {@code this} by a given {@code ExchangeRate}.
      *
      * @param r
      */
-    @Override
-    public void multiplyRate(ExchangeRate r) {
+    private void multiplyRate(ExchangeRate r) {
         assert r != null : "Violation of: r is not null";
         this.rep *= r.rep;
+    }
+
+    /**
+     * New toString method.
+     */
+    @Override
+    public String toString() {
+        return this.rep.toString();
     }
 
     /**
@@ -172,40 +155,63 @@ public class ExchangeRate {
 
         out.println(
                 "Welcome! Let's see some the ExchangeRate methods in action. The three we will see today are:");
-        out.println("setRate, isWorthless, and multiplyRate");
-        out.println();
-        out.println("Let's start with setRate.");
+        out.println("setRate, isWorthless, compareValue, and multiplyRate");
         out.println();
 
-        out.print(
+        // Showcase setRate
+        out.println("Let's start with setRate.");
+        out.println();
+        out.println(
                 "Enter two currencies to make an ExchangeRate! The rate will be the ratio of the second entry to the first!");
         double currency1 = Double.valueOf(in.nextLine());
         double currency2 = Double.valueOf(in.nextLine());
 
-        ExchangeRate r = new ExchangeRate();
+        ExchangeRate r1 = new ExchangeRate();
 
-        r.setRate(currency1, currency2);
+        r1.setRate(currency1, currency2);
 
         out.println("The exchange rate of " + currency2 + " to " + currency1
-                + " is " + r.toString());
+                + " is " + r1.toString());
+        out.println();
 
+        // Showcase isWorthless
         out.println("Let's check out the isWorthless method!");
-        if (r.isWorthless()) {
-            out.println(r.toString() + "is ≤ 0, so it's worthless!");
+        out.println();
+        if (r1.isWorthless()) {
+            out.println(r1.toString() + "is ≤ 0, so it's worthless!");
         } else {
-            out.println(r.toString() + "is ≥ 0, so it is NOT worthless!");
+            out.println(r1.toString() + "is ≥ 0, so it is NOT worthless!");
         }
+        out.println();
 
-        out.println("Finally, let's see the multiplyRate method.");
+        // Showcase compareValue
+        out.println("Let's check out compareValue.");
+        out.println();
+        out.println(
+                "Enter a new ExchangeRate to compare to the value of the other one:");
+        ExchangeRate r2 = new ExchangeRate(in.nextLine());
+        if (r1.compareValue(r2) > 0) {
+            out.println(r1.toString() + " is greater than " + r2.toString());
+        } else if (r1.compareValue(r2) < 0) {
+            out.println(r1.toString() + " is less than " + r2.toString());
+        } else {
+            out.println(r1.toString() + " is equal to " + r2.toString());
+        }
+        out.println();
+
+        // Showcase multiplyRate
+        out.println("Let's see the multiplyRate method.");
+        out.println();
         out.println(
                 "Enter an ExchangeRate to multiply your previous ExchangeRate by:");
         String inflationRateString = in.nextLine();
-        ExchangeRate inflRate = new ExchangeRate1(inflationRateString);
-        r.multiplyRate(inflRate);
+        ExchangeRate inflRate = new ExchangeRate(inflationRateString);
+        r1.multiplyRate(inflRate);
+        out.println("Your old rate is now " + r1.toString() + ".");
+        out.println();
 
-        out.println("Your old rate is now " + r.toString()
-                + "! That's all for now! Goodbye!");
-
+        // Wrap up
+        out.println("That's all for now! Goodbye!");
         in.close();
         out.close();
     }
