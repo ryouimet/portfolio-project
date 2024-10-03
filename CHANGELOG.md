@@ -24,4 +24,4 @@ the following form: YYYY.0M.0D.
 
 ### Updated
 
-- Changed design to exclude the `getRates` kernel method, and added three secondary methods: `isMoreValuable`, `isLessValuable`, and `hasEqualValue`, and changed component brainstorming document to reflect these changes.
+- Changed design to exclude the `getRates` kernel method, and added a secondary method: `compareValue`, and changed component brainstorming document to reflect these changes.
